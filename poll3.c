@@ -7,10 +7,10 @@ main()
 	while (1) {
     	voltage = adc.getVoltage(1);
     	if (adc.fail()) {
-  	    	println("Es ist ein Fehler aufgetreten!");
+  	    	printf("Es ist ein Fehler aufgetreten!\n");
 		}
         else {
-            println("%i mV", voltage);
+            printf("%i mV\n", voltage);
         }	
 	    usleep(200000);
 	}
