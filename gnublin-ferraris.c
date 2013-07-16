@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include "gnublin.h"
 #include <stdbool.h>
+#include <time.h>
 
 #define DEBUG
 #define THRESHOLD 2700
 
+time_t previousRed;
+bool init = true;
+    
 int getVoltage()
 {
     gnublin_adc adc;
@@ -24,13 +28,27 @@ int getVoltage()
 
 void logRed()
 {
-    printf("one round completed\n");
+	if (init) {
+		#ifdef DEBUG
+		printf("first sight of red bar, ignoring");
+		#endif
+		init = false;
+		time(&previousRed);
+		return;
+	}
+	double seconds = difftime(time(NULL), previousRed);
+	#ifdef DEBUG
+    printf("one round completed, duration: %f seconds.\n", seconds);
+    #endif
+    // TODO: log to file
+    
 }
 
 int main()
 {
     int v;
     bool red = false;
+
     while (1) {
         v = getVoltage();
         if (v > THRESHOLD) {
