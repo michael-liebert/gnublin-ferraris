@@ -33,7 +33,7 @@ void logRed()
 		printf("first sight of red bar, ignoring");
 		#endif
 		init = false;
-		time(&previousRed);
+		time(&previousRed); // initially set to current time
 		return;
 	}
 	double seconds = difftime(time(NULL), previousRed);
@@ -42,6 +42,7 @@ void logRed()
     #endif
     // TODO: log to file
     
+    time(&previousRed); // set to current time
 }
 
 int main()
