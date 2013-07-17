@@ -28,7 +28,7 @@ int getVoltage()
 }
 
 double calculateWatts(int seconds) {
-    return 3600 / ROUNDS_PER_KWH / seconds * 1000;
+    return 3600.0 / ROUNDS_PER_KWH / seconds * 1000;
 }
 
 void logRed()
