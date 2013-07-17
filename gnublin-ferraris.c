@@ -6,6 +6,7 @@
 #define DEBUG
 #define THRESHOLD 2700
 #define ROUNDS_PER_KWH 71
+#define DATA_FILENAME "/var/www/gnublin-ferraris.csv"
 
 time_t previousRed;
 bool init = true;
@@ -31,6 +32,26 @@ double calculateWatts(int seconds) {
     return 3600.0 / ROUNDS_PER_KWH / seconds * 1000;
 }
 
+void writeDataFile(double watts, int seconds, char* date) {
+	FILE *f;
+	f = fopen(DATA_FILENAME, "w");
+	if (f == NULL) {
+		printf("error opening data file %s.", DATA_FILENAME);
+		return;
+	}
+	fprintf(f, "%.1f;%d;%s;%d", watts, seconds, date, ROUNDS_PER_KWH);
+	fclose(f);
+}
+
+char* getCurrentLocaltime() {
+	time_t now;
+	time(&now);
+	struct tm* timeinfo = localtime(&now);
+    char* s = asctime(timeinfo);
+    s[strlen(s)-1] = 0x0; // strip annoying "\n" from ascinfo()
+	return s;
+}
+
 void logRed()
 {
 	if (init) {
@@ -46,8 +67,8 @@ void logRed()
 	#ifdef DEBUG
     printf("one round completed, duration: %d seconds, power consumption: %.1f W.\n", seconds, watts);
     #endif
-    // TODO: log to file
-    
+
+    writeDataFile(watts, seconds, getCurrentLocaltime());
     time(&previousRed); // set to current time
 }
 
