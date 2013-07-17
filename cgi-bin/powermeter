@@ -1,0 +1,30 @@
+#!/bin/bash
+cat << EOF
+Content-Type: text/html
+
+<html>
+<head>
+<title>Powermeter</title>
+<meta http-equiv="refresh" content="5">
+</head>
+<body>
+<center>
+<h1>Powermeter Stats</h1>
+EOF
+
+IN=$(head -n 1 /var/www/gnublin-ferraris.csv)
+IFS=";" read -a ARR <<< "$IN"
+
+echo "<table border=\"1\">"
+echo "<tr><td>Current power consumption</td><td>${ARR[0]} W</td></tr>"
+echo "<tr><td>Last cycle duration</td><td>${ARR[1]} s</td></tr>"
+echo "<tr><td>Last cycle completed on</td><td>${ARR[2]}</tr>"
+echo "<tr><td>Cycles per KWh</td><td>${ARR[3]}</td></tr>" 
+echo "</table>"
+
+cat << EOF
+</center>
+</body>
+</html>
+EOF
+
